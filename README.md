@@ -37,6 +37,27 @@ Possible sources of code:
 * https://github.com/aws/aws-for-fluent-bit
 * https://github.com/aws/amazon-kinesis-streams-for-fluent-bit
 
+This is the source of the gem:
+
+* https://github.com/awslabs/aws-fluent-plugin-kinesis
+
+Installation process directions from above:
+
+This Fluentd plugin is available as the fluent-plugin-kinesis gem from RubyGems.
+
+`gem install fluent-plugin-kinesis`
+
+Or you can install this plugin for td-agent as:
+
+`td-agent-gem install fluent-plugin-kinesis`
+
+**Dependencies to use the `aws-fluent-plugin-kinesis`**
+
+* Ruby 2.3.0+
+* Fluentd 0.14.22+ (td-agent v3.1.0+)
+
+Question: If we use the registry.redhat.io/openshift4/ose-logging-fluentd image, is `td-agent-gem` in the image?
+
 **Q: What is the source of upstream openshift fluentd container?**
 
 **Master branch:**
