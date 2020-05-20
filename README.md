@@ -6,10 +6,9 @@ Stream of thought
 
 ## Use-Case
 
-We have a need to keep short-term logs (3 to 14 days) in OpenShift using the provided EFK stack.  
-In addition, we have a need to keep logs for a much longer duration (half year to multiple years).
-Since the cluster is on AWS, we have the capability to use AWS's Kinesis Analytics product.  
-To ingest logs into Kinesis, we plan on using the Kinesis Streams API on AWS.
+We have a need to keep short-term logs (3 to 14 days) in OpenShift using the provided EFK stack.  In addition, we have a need to keep logs for a much longer duration (half year to multiple years).  Since the cluster is on AWS, we have the capability to use AWS's Kinesis Analytics product.  
+
+To ingest logs into Kinesis Analytics, we plan on using the Kinesis Streams on AWS.
 
 OpenShift provides the capability to fork log output to the internal Elastic and to another fluentd
 using the fluentd-secure-forwarder method.
