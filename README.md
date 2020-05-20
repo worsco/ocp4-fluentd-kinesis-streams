@@ -11,10 +11,11 @@ https://catalog.redhat.com/software/containers/detail/5cd9744edd19c778293af093?t
 ## Determine method of adding the kinesis-streams plugin for fluentd
 
 ## Possible sources of code:
+* https://github.com/fluent/fluentd-forwarder
 * https://github.com/aws/aws-for-fluent-bit
 * https://github.com/aws/amazon-kinesis-streams-for-fluent-bit
 
-### Source of upstream fluentd container
+## Source of upstream fluentd container
 
 **Master**
 
@@ -34,8 +35,8 @@ https://docs.openshift.com/container-platform/4.3/logging/config/cluster-logging
 
 * Stand up AWS OCP 4.3 cluster
 * Install logging stack
-* Enable kinesis stream
-* Deploy fluentd-forwarder with creds and kinesis endpoint for ingest
-* Alter cluster logging configmap to forward via secure fluentd forwarder
-* Generate traffic (logs)
-* Inspect kinesis
+* Enable kinesis stream API endpoint service on AWS
+* Deploy fluentd-forwarder(+kinesis endpoint) and auth creds via secret (not IAM)
+* Alter cluster logging configmap to forward to the secure fluentd forwarder
+* Generate traffic in logs
+* Inspect AWS kinesis (analytics)?
