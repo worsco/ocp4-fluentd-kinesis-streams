@@ -17,3 +17,13 @@ https://catalog.redhat.com/software/containers/detail/5cd9744edd19c778293af093?t
 * Replace XXX with custom local code for client
 
 https://docs.openshift.com/container-platform/4.3/logging/config/cluster-logging-external.html#cluster-logging-collector-fluentd_cluster-logging-external
+
+## Testing
+
+* Stand up AWS OCP 4.3 cluster
+* Install logging stack
+* Enable kinesis stream
+* Deploy fluentd-forwarder with creds and kinesis endpoint for ingest
+* Alter cluster logging configmap to forward via secure fluentd forwarder
+* Generate traffic (logs)
+* Inspect kinesis
