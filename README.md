@@ -1,8 +1,8 @@
 # ocp4-fluentd-kinesis-streams
 
-* ALPHA *
+*ALPHA*
 
-* WORK IN PROGRESS *
+*WORK IN PROGRESS*
 
 ## Use registry.redhat.io/openshift4/ose-logging-fluentd as the base image
 
