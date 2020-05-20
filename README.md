@@ -1,8 +1,6 @@
 # ocp4-fluentd-kinesis-streams
 
-*ALPHA*
-
-*WORK IN PROGRESS*
+**WORK IN PROGRESS**
 
 ## Use registry.redhat.io/openshift4/ose-logging-fluentd as the base image
 
@@ -15,6 +13,16 @@ https://catalog.redhat.com/software/containers/detail/5cd9744edd19c778293af093?t
 ## Possible sources of code:
 * https://github.com/aws/aws-for-fluent-bit
 * https://github.com/aws/amazon-kinesis-streams-for-fluent-bit
+
+### Source of upstream fluentd container
+
+**Master**
+
+* https://github.com/openshift/origin-aggregated-logging/blob/master/fluentd/Dockerfile
+
+**4.3**
+
+* https://github.com/openshift/origin-aggregated-logging/blob/release-4.3/fluentd/Dockerfile
 
 ## New project/namespace for the fluentd secure forwarder
 * Example:  XXX-fluentd-forwarder
