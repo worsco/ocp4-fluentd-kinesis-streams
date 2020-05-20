@@ -96,3 +96,61 @@ A: Examine the following insturctions:
 
 * If the custom fluentd-kinesis forwarder pod generates logs, how do you stop it from logging its own logs?
 * Does the fluentd-kinesis forwarder have to be outside/standalone?
+
+# NOTES
+
+Image used:
+
+registry.redhat.io/openshift4/ose-logging-fluentd@sha256:40edd9833d5a4290f63cfbc7a442f6ce5ba4f21c2acd252e0ec4a0db9a25b7c5
+
+Inspecting the fluentd image via `oc rsh ...`
+
+
+What files are named fluentd?
+
+```
+sh-4.2# find / -name "fluentd"
+/run/ocp-collector/secrets/fluentd
+/var/lib/fluentd
+/var/log/pods/openshift-logging_fluentd-6655j_71e70f39-7a64-4087-bdc4-810bfc477d54/fluentd
+/var/log/fluentd
+/opt/rh/rh-ruby25/root/usr/local/bin/fluentd
+/opt/rh/rh-ruby25/root/usr/local/share/gems/gems/fluent-plugin-remote-syslog-1.1/lib/fluentd
+/opt/rh/rh-ruby25/root/usr/local/share/gems/gems/fluentd-1.7.4/bin/fluentd
+```
+
+Anything named fluent.gem?
+
+```
+sh-4.2# find / -name "fluent*gem"
+/opt/rh/rh-ruby25/root/usr/local/bin/fluent-gem
+/opt/rh/rh-ruby25/root/usr/local/share/gems/gems/fluentd-1.7.4/bin/fluent-gem
+```
+
+I saw "rh/rh-ruby25". This must be a software collection library package! What version is it?
+
+```
+sh-4.2# scl --list
+rh-ruby25
+
+sh-4.2# scl enable rh-ruby25 bash
+bash-4.2# ruby --version
+ruby 2.5.5p157 (2019-03-15 revision 67260) [x86_64-linux]
+```
+
+What's the version of fluentd?
+
+```
+bash-4.2# fluentd --version
+fluentd 1.7.4
+```
+
+Image has the SCL edition of Ruby 2.5, does it include gem? Yes it does.
+
+```sh-4.2# scl --list
+rh-ruby25
+
+sh-4.2# scl enable rh-ruby25 bash
+bash-4.2# which gem
+/opt/rh/rh-ruby25/root/usr/bin/gem
+```
