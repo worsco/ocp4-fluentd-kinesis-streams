@@ -153,4 +153,7 @@ rh-ruby25
 sh-4.2# scl enable rh-ruby25 bash
 bash-4.2# which gem
 /opt/rh/rh-ruby25/root/usr/bin/gem
+
+bash-4.2# gem --version
+2.7.6.2
 ```
