@@ -1,5 +1,9 @@
 # ocp4-fluentd-kinesis-streams
 
+* ALPHA *
+
+* WORK IN PROGRESS *
+
 ## Use registry.redhat.io/openshift4/ose-logging-fluentd as the base image
 
 * As of 2020-05-20, image tag is v4.3.20-202005121847
