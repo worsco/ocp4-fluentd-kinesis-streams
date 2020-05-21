@@ -157,3 +157,31 @@ bash-4.2# which gem
 bash-4.2# gem --version
 2.7.6.2
 ```
+
+## MANUAL BUILD (pre-Dockerfile)
+
+```podman login registry.redhat.io -u $RH_REG_USER -p $RH_REG_PASS
+```
+
+```podman run -it \
+registry.redhat.io/openshift4/ose-logging-fluentd@sha256:40edd9833d5a4290f63cfbc7a442f6ce5ba4f21c2acd252e0ec4a0db9a25b7c5 bash
+```
+
+Install dependencies to build the package via "gem"
+
+``` yum -y install rh-ruby25-ruby-devel \
+rh-ruby25-rubygems-devel \
+gcc-c++ \
+make
+```
+
+Enable the ruby 2.5 environment
+
+```scl enable rh-ruby25 -- sh run.sh
+```
+
+Install fluent-plugin-kinesis via gem
+
+```gem install fluent-plugin-kinesis --verbose
+```
+
