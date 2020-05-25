@@ -200,7 +200,7 @@ buildah bud -t fluentd-custom-kinesis .
 Tag the image.
 
 ```
-podman tag localhost/fluentd-custom-kinesis quay.io/worsco/ocp4-fluentd-kinesis-forwader:latest
+podman tag localhost/fluentd-custom-kinesis quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
 
 Log into quay.
@@ -212,5 +212,5 @@ podman login -u worsco quay.io
 Push the image.
 
 ```
-podman push quay.io/worsco/ocp4-fluentd-kinesis-forwader:latest
+podman push quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
