@@ -91,9 +91,9 @@ A: Follow these instructions:
 
 Image used:
 
-registry.redhat.io/openshift4/ose-logging-fluentd@sha256:40edd9833d5a4290f63cfbc7a442f6ce5ba4f21c2acd252e0ec4a0db9a25b7c5
+`registry.redhat.io/openshift4/ose-logging-fluentd@sha256:40edd9833d5a4290f63cfbc7a442f6ce5ba4f21c2acd252e0ec4a0db9a25b7c5`
 
-Inspecting the fluentd image via `oc rsh ...`
+Inspecting the fluentd image via `oc rsh <fluentd-HASH>` in namespace `openshift-logging` on a cluster with the logging EFK stack installed. 
 
 
 What files are named `fluentd` in the container?
@@ -150,10 +150,10 @@ bash-4.2# gem --version
 
 ## MANUAL BUILD (pre-Dockerfile)
 
-Log into the registry.
+Log into the registry (previously set the environment variables `RH_REG_USER` and `RH_REG_PASS` with my credentials).
 
 ```
-podman login registry.redhat.io -u $RH_REG_USER -p $RH_REG_PASS
+podman login -u $RH_REG_USER -p $RH_REG_PASS registry.redhat.io 
 ```
 
 Execute the container.
@@ -188,7 +188,7 @@ gem install fluent-plugin-kinesis --verbose
 Log into the registry (previously set the environment variables `RH_REG_USER` and `RH_REG_PASS` with my credentials).
 
 ```
-buildah login registry.redhat.io -U $RH_REG_USER -p $RH_REG_PASS
+buildah login -u $RH_REG_USER -p $RH_REG_PASS registry.redhat.io
 ```
 
 Build the container.
@@ -206,7 +206,7 @@ podman tag localhost/fluentd-custom-kinesis quay.io/worsco/ocp4-fluentd-kinesis-
 Log into quay.
 
 ```
-podman login quay.io -u worsco -p
+podman login -u worsco quay.io
 ```
 
 Push the image.
