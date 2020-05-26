@@ -60,9 +60,7 @@ Dependencies to use the `aws-fluent-plugin-kinesis`:
 
 **Q: If we can host the fluentd-kinesis-forwarder in OpenShift, what would we name the project/namespace?**
 
-A: A possible example:  `XXX-fluentd-forwarder`
-
-Replace `XXX` with custom local 'code' for customer name
+A: A possible example:  `infrafluentdforwarder`
 
 **Q: How do you configure OpenShift to fork logs to the fluentd-kinesis-forwader?**
 
