@@ -1,0 +1,32 @@
+apiVersion: logging.openshift.io/v1alpha1
+kind: LogForwarding
+metadata:
+  name: instance
+  namespace: openshift-logging
+spec:
+  disableDefaultForwarding: true
+  outputs:
+    - name: elasticsearch
+      endpoint: "elasticsearch.openshift-logging.svc:9200"
+      secret:
+        name: fluentd
+      type: elasticsearch
+    - name: log-forwarding-kinesis
+      endpoint: "log-forwarding-kinesis:24224"
+      type: forward
+      insecure: true
+  pipelines:
+    - name: container-logs
+      inputSource: logs.app
+      outputRefs:
+        - elasticsearch
+        - log-forwarding-kinesis
+    - name: infra-logs
+      inputSource: logs.infra
+      outputRefs:
+        - elasticsearch
+        - log-forwarding-kinesis
+    - name: audit-logs
+      inputSource: logs.audit
+      outputRefs:
+        - elasticsearch
