@@ -12,7 +12,7 @@ spec:
         name: fluentd
       type: elasticsearch
     - name: log-forwarding-kinesis
-      endpoint: "log-forwarding-kinesis:24284"
+      endpoint: "log-forwarding-kinesis:24224"
       type: forward
       insecure: true
   pipelines:
