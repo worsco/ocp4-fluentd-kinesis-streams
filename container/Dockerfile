@@ -15,10 +15,18 @@ RUN : 'removed yum-config-manager' \
 
 WORKDIR ${HOME}
 
-CMD ["scl", "enable", "rh-ruby25", "--", "sh", "run.sh"]
+#CMD ["scl", "enable", "rh-ruby25", "--", "sh", "run.sh"]
+CMD ["scl", "enable", "rh-ruby25", "bash"]
 
 LABEL io.k8s.display-name=Fluentd-custom-kinesis
 
 LABEL \
-        io.k8s.display-name="Fluentd-custom-kinesis" \
-        io.k8s.description="Fluentd custom container for forwarding to AWS kinesis"
+        io.k8s.description="Fluentd custom container for forwarding to AWS kinesis" \
+        License="GPLv2+" \
+        version="v4.0.0" \
+        architecture="x86_64" \
+        release="0.0.0.0"
+
+# Other labels you may want to add:
+# vendor="Your Company"
+# name="yourcontainerrepo/fluentd-custom-kinesis"
