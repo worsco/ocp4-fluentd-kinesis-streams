@@ -4,8 +4,8 @@ MAINTAINER Infra DevOps <scott.c.worthington+quayio@gmail.com>
 
 USER 0
 
-RUN : 'removed yum-config-manager' \
- &&   INSTALL_PKGS="rh-ruby25-ruby-devel  rh-ruby25-rubygems-devel  gcc-c++  make" \
+RUN \
+      INSTALL_PKGS="rh-ruby25-ruby-devel  rh-ruby25-rubygems-devel  gcc-c++  make" \
  &&   REMOVE_PKGS="cpp gcc glibc-devel glibc-headers libgomp libmpc libstdc++-devel kernel-headers mpfr" \
  &&   yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS \
  &&   rpm -V $INSTALL_PKGS \
