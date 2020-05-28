@@ -7,12 +7,12 @@ spec:
   disableDefaultForwarding: true
   outputs:
     - name: elasticsearch
-      endpoint: "elasticsearch.openshift-logging.svc:9200"
+      endpoint: "elasticsearch.openshift-logging.svc.cluster.local:9200"
       secret:
         name: fluentd
       type: elasticsearch
     - name: log-forwarding-kinesis
-      endpoint: "log-forwarding-kinesis:24224"
+      endpoint: "log-forwarding-kinesis.openshift-logging.svc.cluster.local:24224"
       type: forward
       insecure: true
   pipelines:
