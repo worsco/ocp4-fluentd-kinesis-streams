@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: log-forwarding-kinesis
     app.kubernetes.io/part-of: log-forwarding-kinesis
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: log-forwarding-kinesis
