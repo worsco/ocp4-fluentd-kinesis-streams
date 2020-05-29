@@ -1,4 +1,4 @@
-FROM registry.redhat.io/openshift4/ose-logging-fluentd:v4.3.20-202005121847
+FROM registry.redhat.io/openshift4/ose-logging-fluentd:v4.3.22-202005201238
 
 MAINTAINER Infra DevOps <scott.c.worthington+quayio@gmail.com>
 
