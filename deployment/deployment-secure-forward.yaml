@@ -37,12 +37,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: AWS_KEY_ID
-                  name: log-forwarding-kinesis
+                  name: log-forwarding-kinesis-aws
             - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   key: AWS_SEC_KEY
-                  name: log-forwarding-kinesis
+                  name: log-forwarding-kinesis-aws
           imagePullPolicy: Always
           volumeMounts:
             - name: log-forwarding-kinesis-config
