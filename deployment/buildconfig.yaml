@@ -1,0 +1,23 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: "log-forwarding-kinesis"
+  namespace: "openshift-logging"
+spec:
+  runPolicy: "Serial"
+  source:
+    contextDir: "container"
+    git:
+      uri: "https://github.com/worsco/ocp4-fluentd-kinesis-streams"
+      ref: "master"
+  output:
+    to:
+      kind: ImageStreamTag
+      name: "log-forwarding-kinesis:latest"
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: "ImageStreamTag"
+        name: "ose-logging-fluentd:v4.3.22-202005201238"
+        namespace: "openshift"
