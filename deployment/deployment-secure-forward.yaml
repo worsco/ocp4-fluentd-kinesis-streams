@@ -33,6 +33,16 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: spec.nodeName
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_KEY_ID
+                  name: log-forwarding-kinesis
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SEC_KEY
+                  name: log-forwarding-kinesis
           imagePullPolicy: Always
           volumeMounts:
             - name: log-forwarding-kinesis-config
