@@ -28,6 +28,14 @@ spec:
           terminationMessagePath: /dev/termination-log
           name: log-forwarding-kinesis
           env:
+            - name: KINESIS_STREAM_NAME
+              value: "CHANGEME"
+            - name: KINESIS_REGION
+              value: "CHANGEME"
+            - name: FORWARD_FLUSH_INTERVAL
+              value: "60s"
+            - name: BUFFER_SIZE_LIMIT
+              value: "1m"
             - name: NODE_NAME
               valueFrom:
                 fieldRef:
