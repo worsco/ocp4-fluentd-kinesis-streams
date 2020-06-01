@@ -31,4 +31,4 @@ spec:
     - name: audit-logs
       inputSource: logs.audit
       outputRefs:
-        - elasticsearch
+        - log-forwarding-kinesis
