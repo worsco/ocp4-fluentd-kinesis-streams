@@ -48,6 +48,9 @@ spec:
             - name: log-forwarding-kinesis-config
               readOnly: true
               mountPath: /etc/fluent/
+            - name: log-forwarding-kinesis-secure
+              readOnly: true
+              mountPath: /var/local/fluentsecrets
           terminationMessagePolicy: File
           image: >-
             quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
@@ -66,6 +69,10 @@ spec:
                 path: fluent.conf
             defaultMode: 420
             optional: true
+        - name: log-forwarding-kinesis-secure
+          secret:
+            defaultMode: 420
+            secretName: log-forwarding-kinesis-secure
       dnsPolicy: ClusterFirst
   strategy:
     type: RollingUpdate
