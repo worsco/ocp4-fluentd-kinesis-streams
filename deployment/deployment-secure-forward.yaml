@@ -50,7 +50,7 @@ spec:
               mountPath: /etc/fluent/
             - name: log-forwarding-kinesis-secure
               readOnly: true
-              mountPath: /var/local/fluentsecrets
+              mountPath: /var/run/secrets/fluentsecrets
           terminationMessagePolicy: File
           image: >-
             quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
