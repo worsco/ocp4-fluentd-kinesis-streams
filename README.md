@@ -6,7 +6,7 @@
 
 We need to keep short-term logs (from 3 to 14 days) in OpenShift using the provided EFK stack.  In addition, we need to keep logs for a much longer duration (months to possibly years).  The OpenShift cluster is in AWS, and we have the capability to use AWS's Kinesis Streams.  
 
-Red Hat OpenShift 4.3 provides the capability to fork log output to the internal Elastic.  To do so, you have to stand up a custom fluentd (and install the AWS plugins) and configure the stock fluentd to forward to the external fluentd
+Red Hat OpenShift 4.3 provides the capability to fork log output to the internal Elastic and to another fluentd instance.  To do so, you have to stand up a custom fluentd (and install the AWS plugins) and configure the stock fluentd to forward to the external fluentd
 using the fluentd-secure-forwarder method.
 
 ### Externally Hosted fluentd forwarder
