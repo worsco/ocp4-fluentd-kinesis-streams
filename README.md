@@ -93,14 +93,16 @@ Click on: Create data stream
 
 Take note of the ARN, it will be used with your the policy attached to your IAM User
 
-## Create your AWS IAM with Policy
+## Create your AWS IAM User
+
+Create an IAM user and name it to your liking.
 
 ```
 Create a new user:
 ocp4-kinesis-user
 ```
 
-Take note of the `AWS_KEY_ID` and `AWS_SEC_KEY`, it will be used during the installation.
+Take note of the `AWS_KEY_ID` and `AWS_SEC_KEY` as it will be used during the installation.
 
 ## Attach Policy
 
@@ -124,7 +126,7 @@ You should further restrict the following policy.
 
 ## Build with container with buildah
 
-Export your registry.redhat.io user + pass to environmental variables
+Export your registry.redhat.io user + password to environmental variables.
 
 ```
 export RH_REG_USER=YourUsername
@@ -150,7 +152,7 @@ Tag the image.
 podman tag localhost/fluentd-custom-kinesis quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
 
-Export your quay.io user + pass to environment variables
+Export your quay.io user + password to environment variables.
 
 ```
 export QUAY_USER=YourUsername
@@ -169,7 +171,9 @@ Push the image.
 podman push quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
 
-Run the installer, replace the environment variables with your data
+## Install
+
+Run the installer, replace the environment variables with your data.
 
 ```
 cd ../scripts
@@ -182,7 +186,9 @@ KINESIS_REGION="your-aws-region" \
 
 ```
 
-## To completely uninstall and revert back
+## Uninstall
+
+To completely uninstall and revert all settings back.
 
 ```
 ./uninstall_log_forwarding_kinesis.sh
