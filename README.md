@@ -91,7 +91,7 @@ Number of open shards
 Click on: Create data stream
 ```
 
-Take note if the ARN, it will be used with your IAM + Policy
+Take note of the ARN, it will be used with your the policy attached to your IAM User
 
 ## Create your AWS IAM with Policy
 
@@ -155,6 +155,7 @@ Export your quay.io user + pass to environment variables
 ```
 export QUAY_USER=YourUsername
 export QUAY_PASS=YourPassword
+```
 
 Log into quay.
 
@@ -181,7 +182,8 @@ KINESIS_REGION="your-aws-region" \
 
 ```
 
-## To uninstall
+## To completely uninstall and revert back
 
 ```
 ./uninstall_log_forwarding_kinesis.sh
+```
