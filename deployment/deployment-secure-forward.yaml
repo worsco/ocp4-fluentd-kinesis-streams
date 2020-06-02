@@ -29,9 +29,9 @@ spec:
           name: log-forwarding-kinesis
           env:
             - name: KINESIS_STREAM_NAME
-              value: "CHANGEME"
+              value: "CHANGEME-KINESIS-STREAM-NAME"
             - name: KINESIS_REGION
-              value: "CHANGEME"
+              value: "CHANGEME-KINESIS-REGION"
             - name: FORWARD_FLUSH_INTERVAL
               value: "60s"
             - name: BUFFER_SIZE_LIMIT
