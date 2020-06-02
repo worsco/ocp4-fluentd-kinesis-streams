@@ -175,8 +175,8 @@ podman push quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ## Customize
 
 The file `deployment/deployment-secure-forward.yaml` contains a directive to
-pull the container image from `quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest`. i
-You will need to customize that.
+pull the container image from `quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest`.
+Please customize it to your repository.
 
 ## Install
 
