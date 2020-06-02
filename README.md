@@ -146,13 +146,14 @@ Build the container.
 buildah bud -t fluentd-custom-kinesis .
 ```
 
-Tag the image.
+Tag the image. The quay repo is named 'worsco' -- change it to your repo name.
 
 ```
 podman tag localhost/fluentd-custom-kinesis quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
 
-Export your quay.io user + password to environment variables.
+I will be pushing my container into quay.  To do so, I will be logging into quay.io and will need to
+export my quay.io user + password to environment variables.
 
 ```
 export QUAY_USER=YourUsername
@@ -165,11 +166,17 @@ Log into quay.
 podman login -u $QUAY_USER -p $QUAY_PASS quay.io
 ```
 
-Push the image.
+Push the image into your repository.
 
 ```
 podman push quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
+
+## Customize
+
+The file `deployment/deployment-secure-forward.yaml` contains a directive to
+pull the container image from `quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest`. i
+You will need to customize that.
 
 ## Install
 
