@@ -200,3 +200,8 @@ To completely uninstall and revert all settings back.
 ```
 ./uninstall_log_forwarding_kinesis.sh
 ```
+
+## Todo
+
+* Pod Autoscaler based on CPU usage
+* Pod anti-affininty rule to stop two pods in same Node (or same AZ?)
