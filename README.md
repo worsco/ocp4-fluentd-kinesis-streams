@@ -17,7 +17,7 @@ http://v1.uncontained.io/playbooks/operationalizing/secure-forward-splunk.html
 
 ### Hosted fluentd-forwarder within OpenShift
 
-After considering standing up a single VM, it was determined to host the fluentd-forwarder within the OpenShift cluster.  This design will be tested to see if the pod can be scaled up for high availability as well as redundancy.
+After considering standing up a single VM, it was decided to host the fluentd-forwarder within OpenShift.  This design will allow scaling the pod for high availability as well as scaling under CPU load.
 
 ### Base Image
 
