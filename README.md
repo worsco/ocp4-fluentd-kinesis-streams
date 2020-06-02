@@ -9,15 +9,15 @@ We need to keep short-term logs (from 3 to 14 days) in OpenShift using the provi
 Red Hat OpenShift 4.3 provides the capability to fork log output to the internal Elastic and to another fluentd instance.  To do so, you have to stand up a custom fluentd (and install the AWS plugins) and configure the stock fluentd to forward to the external fluentd
 using the fluentd-secure-forwarder method.
 
-### Externally Hosted fluentd forwarder
+### Externally Hosted fluentd-secure-forwarder
 
-The following URL contains a design to stand up an external fluented forwarder as stand-alone.
+The following URL contains a design to stand up an external fluentd-secure-forwarder as stand-alone.
 
 http://v1.uncontained.io/playbooks/operationalizing/secure-forward-splunk.html
 
-### Hosted fluentd-forwarder within OpenShift
+### fluentd-secure-forwarder within OpenShift
 
-After considering standing up a single VM, it was decided to host the fluentd-forwarder within OpenShift.  This design will allow scaling the pod for high availability as well as scaling under CPU load.
+After considering standing up a single VM, it was decided to host the fluentd-secure-forwarder within OpenShift.  This design will allow scaling the pod for high availability as well as scaling under CPU load.
 
 ### Base Image
 
