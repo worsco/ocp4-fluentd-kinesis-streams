@@ -58,10 +58,6 @@ Dependencies to use the `aws-fluent-plugin-kinesis`:
 
 * https://github.com/openshift/origin-aggregated-logging/blob/release-4.3/fluentd/Dockerfile
 
-**Q: If we can host the fluentd-kinesis-forwarder in OpenShift, what would we name the project/namespace?**
-
-A: A possible example:  `infrafluentdforwarder`
-
 **Q: How do you configure OpenShift to fork logs to the fluentd-kinesis-forwader?**
 
 A: Follow these instructions:
@@ -80,112 +76,65 @@ A: Follow these instructions:
 * Generate traffic in logs
 * Inspect AWS kinesis (analytics?)
 
-## QUESTIONS
-
-* If the custom fluentd-kinesis forwarder pod generates logs, how do you stop it from logging its own logs (will it log its own logs and become exponentially redundant)?
-* Will this work?  Is the fluentd-kinesis forwarder required to be outside of the cluster and standalone?
-
-## NOTES
-
-Image used:
-
-`registry.redhat.io/openshift4/ose-logging-fluentd@sha256:40edd9833d5a4290f63cfbc7a442f6ce5ba4f21c2acd252e0ec4a0db9a25b7c5`
-
-Inspecting the fluentd image via `oc rsh <fluentd-HASH>` in namespace `openshift-logging` on a cluster with the logging EFK stack installed. 
-
-
-What files are named `fluentd` in the container?
+## Create your Kinesis Stream
 
 ```
-sh-4.2# find / -name "fluentd"
-/run/ocp-collector/secrets/fluentd
-/var/lib/fluentd
-/var/log/pods/openshift-logging_fluentd-6655j_71e70f39-7a64-4087-bdc4-810bfc477d54/fluentd
-/var/log/fluentd
-/opt/rh/rh-ruby25/root/usr/local/bin/fluentd
-/opt/rh/rh-ruby25/root/usr/local/share/gems/gems/fluent-plugin-remote-syslog-1.1/lib/fluentd
-/opt/rh/rh-ruby25/root/usr/local/share/gems/gems/fluentd-1.7.4/bin/fluentd
+Amazon Kinesis -> Data streams -> Create data stream
+
+Data stream name:
+mytest-ocp-kinesis-stream
+
+Data stream capacity
+Number of open shards
+2
+
+Click on: Create data stream
 ```
 
-What files are named `fluent.gem`?
+Take note if the ARN, it will be used with your IAM + Policy
+
+## Create your AWS IAM with Policy
 
 ```
-sh-4.2# find / -name "fluent*gem"
-/opt/rh/rh-ruby25/root/usr/local/bin/fluent-gem
-/opt/rh/rh-ruby25/root/usr/local/share/gems/gems/fluentd-1.7.4/bin/fluent-gem
+Create a new user:
+ocp4-kinesis-user
 ```
 
-I saw `rh/rh-ruby25`. This is a software collection library package! What version is it?
+Take note of the `AWS_KEY_ID` and `AWS_SEC_KEY`, it will be used during the installation.
+
+## Attach Policy
+
+You should further restrict the following policy.
 
 ```
-sh-4.2# scl --list
-rh-ruby25
-
-sh-4.2# scl enable rh-ruby25 bash
-bash-4.2# ruby --version
-ruby 2.5.5p157 (2019-03-15 revision 67260) [x86_64-linux]
+{
+    "Version": "2012-10-17",
+    "Statement": {
+        "Action": [
+            "kinesis:PutRecords",
+            "kinesis:DescribeStream"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME"
+        ]
+    }
+}
 ```
 
-What's the version of `fluentd`?
+## Build with container with buildah
+
+Export your registry.redhat.io user + pass to environmental variables
 
 ```
-bash-4.2# fluentd --version
-fluentd 1.7.4
+export RH_REG_USER=YourUsername
+export RH_REG_PASS=YourPassword
 ```
-
-The container image has the SCL edition of Ruby 2.5, does it include gem? Yes it does, see below.
-
-```sh-4.2# scl --list
-rh-ruby25
-
-sh-4.2# scl enable rh-ruby25 bash
-bash-4.2# which gem
-/opt/rh/rh-ruby25/root/usr/bin/gem
-
-bash-4.2# gem --version
-2.7.6.2
-```
-
-## MANUAL BUILD (pre-Dockerfile)
 
 Log into the registry (previously set the environment variables `RH_REG_USER` and `RH_REG_PASS` with my credentials).
 
 ```
-podman login -u $RH_REG_USER -p $RH_REG_PASS registry.redhat.io 
-```
-
-Execute the container.
-
-```
-podman run -it \
-registry.redhat.io/openshift4/ose-logging-fluentd@sha256:40edd9833d5a4290f63cfbc7a442f6ce5ba4f21c2acd252e0ec4a0db9a25b7c5 bash
-```
-
-Install software and their dependencies for installing via `gem` command.
-
-``` yum -y install rh-ruby25-ruby-devel \
-rh-ruby25-rubygems-devel \
-gcc-c++ \
-make
-```
-
-Enable the ruby 2.5 environment.
-
-```
-scl enable rh-ruby25 bash
-```
-
-Install fluent-plugin-kinesis via gem.
-
-```
-gem install fluent-plugin-kinesis --verbose
-```
-
-## Build with buildah
-
-Log into the registry (previously set the environment variables `RH_REG_USER` and `RH_REG_PASS` with my credentials).
-
-```
+cd containers/
 buildah login -u $RH_REG_USER -p $RH_REG_PASS registry.redhat.io
 ```
 
@@ -201,10 +150,16 @@ Tag the image.
 podman tag localhost/fluentd-custom-kinesis quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
 
+Export your quay.io user + pass to environment variables
+
+```
+export QUAY_USER=YourUsername
+export QUAY_PASS=YourPassword
+
 Log into quay.
 
 ```
-podman login -u worsco quay.io
+podman login -u $QUAY_USER -p $QUAY_PASS quay.io
 ```
 
 Push the image.
@@ -212,3 +167,21 @@ Push the image.
 ```
 podman push quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
+
+Run the installer, replace the environment variables with your data
+
+```
+cd ../scripts
+AWS_KEY_ID=YOUR-AWS-KEY-ID \
+AWS_SEC_KEY=YOUR-AWS-SEC-KEY \
+SHARED_KEY=TheSecureForwardSharedKeyChangeMe \
+KINESIS_STREAM_NAME="your-kinesis-stream-name" \
+KINESIS_REGION="your-aws-region" \
+./install_log_forwarding_kinesis.sh
+
+```
+
+## To uninstall
+
+```
+./uninstall_log_forwarding_kinesis.sh
