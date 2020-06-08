@@ -76,19 +76,21 @@ A: Follow these instructions:
 * Generate traffic in logs
 * Inspect AWS kinesis (analytics?)
 
-## Create your Kinesis Stream
+## Create your Kinesis Streams
 
 ```
 Amazon Kinesis -> Data streams -> Create data stream
 
 Data stream name:
-mytest-ocp-kinesis-stream
+mytest-ocp-kinesis-stream-[projects | operations | audit]
 
 Data stream capacity
 Number of open shards
 2
 
 Click on: Create data stream
+
+Repeat above to create all streams
 ```
 
 Take note of the ARN, it will be used with your the policy attached to your IAM User
