@@ -118,7 +118,9 @@ You should further restrict the following policy.
         ],
         "Effect": "Allow",
         "Resource": [
-            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME"
+            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME-FOR-PROJECTS",
+            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME-FOR-OPERATIONS",
+            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME-FOR-AUDIT"
         ]
     }
 }
