@@ -11,24 +11,33 @@ spec:
       secret:
         name: fluentd
       type: elasticsearch
-    - name: log-forwarding-kinesis
-      endpoint: "log-forwarding-kinesis.openshift-logging.svc:24224"
+    - name: log-forwarding-kinesis-projects
+      endpoint: "log-forwarding-kinesis-projects.openshift-logging.svc:24224"
       type: forward
       secret:
-        name: log-forwarding-kinesis-secure
-      #insecure: true
+        name: log-forwarding-kinesis-secure-projects
+    - name: log-forwarding-kinesis-operations
+      endpoint: "log-forwarding-kinesis-operations.openshift-logging.svc:24224"
+      type: forward
+      secret:
+        name: log-forwarding-kinesis-secure-operations
+    - name: log-forwarding-kinesis-audit
+      endpoint: "log-forwarding-kinesis-audit.openshift-logging.svc:24224"
+      type: forward
+      secret:
+        name: log-forwarding-kinesis-secure-audit
   pipelines:
     - name: container-logs
       inputSource: logs.app
       outputRefs:
         - elasticsearch
-        - log-forwarding-kinesis
+        - log-forwarding-kinesis-projects
     - name: infra-logs
       inputSource: logs.infra
       outputRefs:
         - elasticsearch
-        - log-forwarding-kinesis
+        - log-forwarding-kinesis-operations
     - name: audit-logs
       inputSource: logs.audit
       outputRefs:
-        - log-forwarding-kinesis
+        - log-forwarding-kinesis-audit

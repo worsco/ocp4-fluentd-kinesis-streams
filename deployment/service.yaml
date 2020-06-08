@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.openshift.io/serving-cert-secret-name: log-forwarding-kinesis-SERVICENAME
+  name: log-forwarding-kinesis-SERVICENAME
+  namespace: openshift-logging
+spec:
+  ports:
+  - port: 24224
+    protocol: TCP
+    targetPort: 24224
+  selector:
+    app: log-forwarding-kinesis-SERVICENAME

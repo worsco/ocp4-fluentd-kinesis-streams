@@ -1,22 +1,22 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: log-forwarding-kinesis
+  name: log-forwarding-kinesis-DEPLOYMENTNAME
   namespace: openshift-logging
   labels:
     app: log-forwarding-kinesis
-    app.kubernetes.io/component: log-forwarding-kinesis
-    app.kubernetes.io/instance: log-forwarding-kinesis
-    app.kubernetes.io/part-of: log-forwarding-kinesis
+    aopp.kubernetes.io/component: log-forwarding-kinesis-DEPLOYMENTNAME
+    app.kubernetes.io/instance: log-forwarding-kinesis-DEPLOYMENTNAME
+    app.kubernetes.io/part-of: log-forwarding-kinesis-DEPLOYMENTNAME
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: log-forwarding-kinesis
+      app: log-forwarding-kinesis-DEPLOYMENTNAME
   template:
     metadata:
       labels:
-        app: log-forwarding-kinesis
+        app: log-forwarding-kinesis-DEPLOYMENTNAME
     spec:
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
@@ -80,7 +80,7 @@ spec:
         - name: log-forwarding-kinesis-secure
           secret:
             defaultMode: 420
-            secretName: log-forwarding-kinesis-secure
+            secretName: log-forwarding-kinesis-secure-DEPLOYMENTNAME
       dnsPolicy: ClusterFirst
   strategy:
     type: RollingUpdate
