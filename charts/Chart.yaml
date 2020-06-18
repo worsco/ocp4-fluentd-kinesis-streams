@@ -2,8 +2,8 @@ apiVersion: v2
 name: openshift-logforwarding-kinesis
 description: Log Forwarding from OpenShift to AWS Kinesis
 type: application
-version: 0.0.1
-appVersion: 0.0.1
+version: 0.1.0
+appVersion: 0.1.0
 maintainers:
 - email: scott.c.worthington@gmail.com
   name: Scott Worthington
