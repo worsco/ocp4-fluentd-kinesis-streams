@@ -190,7 +190,7 @@ Run the installer, replace the environment variables with your data.
 cd ../scripts
 AWS_KEY_ID=YOUR-AWS-KEY-ID \
 AWS_SEC_KEY=YOUR-AWS-SEC-KEY \
-LOGNAMES="projects operations audit"
+LOGGINGNAMES="projects operations audit"
 KINESIS_STREAM_NAME="your-kinesis-stream-projects your-kinesis-stream-operations your-kinesis-stream-audit" \
 KINESIS_REGION="your-aws-region" \
 ./install_log_forwarding_kinesis.sh
@@ -202,7 +202,7 @@ KINESIS_REGION="your-aws-region" \
 To completely uninstall and revert all settings back.
 
 ```
-LOGNAMES="projects operations audit" \
+LOGGINGNAMES="projects operations audit" \
 ./uninstall_log_forwarding_kinesis.sh
 ```
 
