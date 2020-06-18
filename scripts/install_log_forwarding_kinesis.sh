@@ -52,25 +52,24 @@ for LOGNAME in $LOGGINGNAMES; do
   oc create -f /tmp/service.yaml
 done
 
-echo "Pause for 5 seconds."
-sleep 5
-
-for LOGNAME in $LOGGINGNAMES
-do
-  until oc get secret log-forwarding-kinesis-$LOGNAME -n openshift-logging
-  do
-    echo "Not ready yet."
-    sleep 2
-  done
-done
-
 export MYINDEX=0
 export MYSTREAM=($KINESIS_STREAM_NAME)
 for LOGNAME in $LOGGINGNAMES
 do
-  # Create the TLS certificates for OpenShift fluentd and the fluentd forwarder
-  export TLS_KEY=$(oc get secret log-forwarding-kinesis-$LOGNAME -n openshift-logging -o jsonpath="{.data['tls\.key']}" | base64 -d) 
-  export TLS_CRT=$(oc get secret log-forwarding-kinesis-$LOGNAME -n openshift-logging -o jsonpath="{.data['tls\.crt']}" | base64 -d) 
+  openssl genrsa -out /tmp/ca.key 2048
+  openssl req -new -x509 -days 730 -key /tmp/ca.key -subj "/CN=Acme Root CA" -out /tmp/ca.crt
+  openssl req -newkey rsa:2048 -nodes -keyout /tmp/server.key -subj "/CN=log-forwarding-kinesis-$LOGNAME.openshift-logging.svc" -out /tmp/server.csr
+
+  openssl x509 -req \
+  -extfile <(printf "subjectAltName=DNS:log-forwarding-kinesis-$LOGNAME.openshift-logging.svc,DNS:log-forwarding-kinesis-$LOGNAME.openshift-logging.svc.cluster.local") \
+  -days 730 -in /tmp/server.csr \
+  -CA /tmp/ca.crt \
+  -CAkey /tmp/ca.key \
+  -CAcreateserial \
+  -out /tmp/server.crt
+
+  export TLS_CRT=$(cat /tmp/server.crt ; echo "" ; cat /tmp/ca.crt)
+  export TLS_KEY=$(cat /tmp/server.key)
 
   oc create secret generic log-forwarding-kinesis-secure-$LOGNAME -n openshift-logging \
   --from-literal=tls.crt="$TLS_CRT" \
