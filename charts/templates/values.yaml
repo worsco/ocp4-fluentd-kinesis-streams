@@ -1,0 +1,55 @@
+---
+openshift:
+  logging:
+    namespace: openshift-logging
+    elasticsearch:
+      port: 9200
+  forwarding:
+    audit:
+      elasticsearch: false
+      kinesis-forwarder: false
+    app:
+      elasticsearch: true
+      kinesis-forwarder: true
+    infra:
+      elasticsearch: true
+      kinesis-forwarder: true
+
+forwarding:
+  fluentd:
+    port: 24224
+    loglevel: warn
+    image: quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
+
+kinesis:
+  enabled:
+    - audit
+    - app
+    - infra
+  audit:
+    stream-name: ""
+    fluentd-sharedkey: ""
+    ssl: true
+    # sprig library cannot handle TLS passphrases, yet (2020-06-18)
+    tlspassphrase: ""
+    crtFile: files/audit-server.crt
+    keyFile: files/audit-server.key
+    caFile: files/audit-ca.crt
+  app:
+    stream-name: ""
+    fluentd-sharedkey: ""
+    ssl: true
+    # sprig library cannot handle TLS passphrases, yet (2020-06-18)
+    tlspassphrase: ""
+    crtFile: files/app-server.crt
+    keyFile: files/app-server.key
+    caFile: files/app-ca.crt
+  infra:
+    stream-name: ""
+    fluentd-sharedkey: ""
+    ssl: true
+    # sprig library cannot handle TLS passphrases, yet (2020-06-18)
+    tlspassphrase: ""
+    crtFile: files/infra-server.crt
+    keyFile: files/infra-server.key
+    caFile: files/infra-ca.crt
