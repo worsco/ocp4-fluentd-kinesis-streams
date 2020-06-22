@@ -22,33 +22,32 @@ forwarding:
     image: quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 
 kinesis:
-  enabled:
-    - audit
-    - app
-    - infra
-  audit:
-    stream-name: ""
-    fluentd-sharedkey: ""
+  - name: audit
+    isenabled: true
+    stream_name: "audit-streamname"
+    fluentd_sharedkey: "audit-sharedkey"
     ssl: true
-    # sprig library cannot handle TLS passphrases, yet (2020-06-18)
+    # The golang sprig library cannot handle TLS passphrases, yet (2020-06-18)
     tlspassphrase: ""
     crtFile: files/audit-server.crt
     keyFile: files/audit-server.key
     caFile: files/audit-ca.crt
-  app:
-    stream-name: ""
-    fluentd-sharedkey: ""
+  - name: app
+    isenabled: true
+    stream_name: "app-streamname"
+    fluentd_sharedkey: "app-sharedkey"
     ssl: true
-    # sprig library cannot handle TLS passphrases, yet (2020-06-18)
+    # The golang sprig library cannot handle TLS passphrases, yet (2020-06-18)
     tlspassphrase: ""
     crtFile: files/app-server.crt
     keyFile: files/app-server.key
     caFile: files/app-ca.crt
-  infra:
-    stream-name: ""
-    fluentd-sharedkey: ""
+  - name: infra
+    isenabled: true
+    stream_name: "infra-streamname"
+    fluentd_sharedkey: "infra-sharedkey"
     ssl: true
-    # sprig library cannot handle TLS passphrases, yet (2020-06-18)
+    # The golang sprig library cannot handle TLS passphrases, yet (2020-06-18)
     tlspassphrase: ""
     crtFile: files/infra-server.crt
     keyFile: files/infra-server.key

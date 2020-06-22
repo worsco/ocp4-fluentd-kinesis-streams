@@ -1,5 +1,5 @@
 #!/bin/bash
-# install_log_forwarding_kinesis.sh
+# create_tls_certs.sh
 
 if [[ -z "$LOGGINGNAMES" ]]; then
   echo "You need to set the LOGGINGNAMES environment variable"
