@@ -2,17 +2,21 @@
 # create_tls_certs.sh
 
 if [[ -z "$LOGGINGNAMES" ]]; then
-  echo "You need to set the LOGGINGNAMES environment variable"
+  echo 'You need to set the LOGGINGNAMES environment variable.'
+  echo 'Typically LOGGINGNAMES="audit app infra"'
   exit 1
 fi
 
 if [[ -z "$FILEDEST" ]]; then
-  echo "You need to set the FILEDEST environment variable"
+  echo "You need to set the FILEDEST environment variable."
   exit 1
 fi
 
 # Test that "$FILEDEST" exists/is-valid
-
+if [[ ! -d "$FILEDEST" ]]; then
+  echo "The directory specified in variable FILEDEST does not exist, please check."
+  exit 1
+fi
 
 for LOGNAME in $LOGGINGNAMES
 do
