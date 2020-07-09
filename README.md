@@ -4,10 +4,15 @@
 
 ## Use-Case
 
-We need to keep short-term logs (from 3 to 14 days) in OpenShift using the provided EFK stack.  In addition, we need to keep logs for a much longer duration (months to possibly years).  The OpenShift cluster is in AWS, and we have the capability to use AWS's Kinesis Streams.  
+We need to keep short-term logs (from 3 to 14 days) in OpenShift using the provided 
+EFK stack.  In addition, we need to keep logs for a much longer duration (months to 
+possibly years).  The OpenShift cluster is in AWS, and we have the capability to 
+use AWS's Kinesis Streams.  
 
-Red Hat OpenShift 4.3 provides the capability to fork log output to the internal Elastic and to another fluentd instance.  To do so, you have to stand up a custom fluentd (and install the AWS plugins) and configure the stock fluentd to forward to the external fluentd
-using the fluentd-secure-forwarder method.
+Red Hat OpenShift 4.3 provides the capability to fork log output to the internal Elastic
+ and to another fluentd instance.  To do so, you have to stand up a custom fluentd 
+ (and install the AWS plugins) and configure the stock fluentd to forward to the external 
+ fluentd using the fluentd-secure-forwarder method.
 
 ### Externally Hosted fluentd-secure-forwarder
 
@@ -17,7 +22,9 @@ http://v1.uncontained.io/playbooks/operationalizing/secure-forward-splunk.html
 
 ### fluentd-secure-forwarder within OpenShift
 
-After considering standing up a single VM, it was decided to host the fluentd-secure-forwarder within OpenShift.  This design will allow scaling the pod for high availability as well as scaling under CPU load.
+After considering standing up a single VM, it was decided to host the fluentd-secure-forwarder 
+within OpenShift.  This design will allow scaling the pod for high availability as well as 
+scaling under CPU load.
 
 ### Base Image
 
@@ -64,9 +71,13 @@ A: Follow these instructions:
 
 * https://docs.openshift.com/container-platform/4.3/logging/config/cluster-logging-external.html#cluster-logging-collector-fluentd_cluster-logging-external
 
+## Architecture Diagram
+
+![Architecture Diagram](/diagram/fluentd_kinesis_forwarder.png "Architecture Diagram")
+
 ## Installation Process
 
-* Stand up AWS OCP 4.3 cluster
+* AWS OCP 4.3 cluster
 * Install logging stack
 * Investigate how to enable Kinesis stream on AWS (maybe on personal AWS account)
 * Enable kinesis stream API endpoint service on AWS
@@ -74,7 +85,7 @@ A: Follow these instructions:
 * Deploy fluentd-kinesis-forwarder on OpenShift including configmaps for auth-creds for AWS API access
 * Alter the OpenShift cluster logging configmap to forward to the secure fluentd-kinesis-forwarder
 * Generate traffic in logs
-* Inspect AWS kinesis (analytics?)
+* Inspect AWS kinesis monitoring graphs
 
 ## Create your Kinesis Streams
 
