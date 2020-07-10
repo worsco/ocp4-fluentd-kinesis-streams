@@ -198,7 +198,7 @@ Please customize it to your repository.
 Run the installer, replace the environment variables with your data.
 
 ```
-cd ../scripts
+cd ./scripts
 AWS_KEY_ID=YOUR-AWS-KEY-ID \
 AWS_SEC_KEY=YOUR-AWS-SEC-KEY \
 LOGGINGNAMES="projects operations audit" \
