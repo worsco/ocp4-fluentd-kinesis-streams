@@ -4,10 +4,15 @@
 
 ## Use-Case
 
-We need to keep short-term logs (from 3 to 14 days) in OpenShift using the provided EFK stack.  In addition, we need to keep logs for a much longer duration (months to possibly years).  The OpenShift cluster is in AWS, and we have the capability to use AWS's Kinesis Streams.  
+We need to keep short-term logs (from 3 to 14 days) in OpenShift using the provided 
+EFK stack.  In addition, we need to keep logs for a much longer duration (months to 
+possibly years).  The OpenShift cluster is in AWS, and we have the capability to 
+use AWS's Kinesis Streams.  
 
-Red Hat OpenShift 4.3 provides the capability to fork log output to the internal Elastic and to another fluentd instance.  To do so, you have to stand up a custom fluentd (and install the AWS plugins) and configure the stock fluentd to forward to the external fluentd
-using the fluentd-secure-forwarder method.
+Red Hat OpenShift 4.3 provides the capability to fork log output to the internal Elastic
+ and to another fluentd instance.  To do so, you have to stand up a custom fluentd 
+ (and install the AWS plugins) and configure the stock fluentd to forward to the external 
+ fluentd using the fluentd-secure-forwarder method.
 
 ### Externally Hosted fluentd-secure-forwarder
 
@@ -17,7 +22,9 @@ http://v1.uncontained.io/playbooks/operationalizing/secure-forward-splunk.html
 
 ### fluentd-secure-forwarder within OpenShift
 
-After considering standing up a single VM, it was decided to host the fluentd-secure-forwarder within OpenShift.  This design will allow scaling the pod for high availability as well as scaling under CPU load.
+After considering standing up a single VM, it was decided to host the fluentd-secure-forwarder 
+within OpenShift.  This design will allow scaling the pod for high availability as well as 
+scaling under CPU load.
 
 ### Base Image
 
@@ -64,9 +71,13 @@ A: Follow these instructions:
 
 * https://docs.openshift.com/container-platform/4.3/logging/config/cluster-logging-external.html#cluster-logging-collector-fluentd_cluster-logging-external
 
+## Architecture Diagram
+
+![Architecture Diagram](/diagram/fluentd_kinesis_forwarder.png "Architecture Diagram")
+
 ## Installation Process
 
-* Stand up AWS OCP 4.3 cluster
+* AWS OCP 4.3 cluster
 * Install logging stack
 * Investigate how to enable Kinesis stream on AWS (maybe on personal AWS account)
 * Enable kinesis stream API endpoint service on AWS
@@ -74,21 +85,23 @@ A: Follow these instructions:
 * Deploy fluentd-kinesis-forwarder on OpenShift including configmaps for auth-creds for AWS API access
 * Alter the OpenShift cluster logging configmap to forward to the secure fluentd-kinesis-forwarder
 * Generate traffic in logs
-* Inspect AWS kinesis (analytics?)
+* Inspect AWS kinesis monitoring graphs
 
-## Create your Kinesis Stream
+## Create your Kinesis Streams
 
 ```
 Amazon Kinesis -> Data streams -> Create data stream
 
 Data stream name:
-mytest-ocp-kinesis-stream
+mytest-ocp-kinesis-stream-[projects | operations | audit]
 
 Data stream capacity
 Number of open shards
 2
 
 Click on: Create data stream
+
+Repeat above to create all streams
 ```
 
 Take note of the ARN, it will be used with your the policy attached to your IAM User
@@ -118,7 +131,9 @@ You should further restrict the following policy.
         ],
         "Effect": "Allow",
         "Resource": [
-            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME"
+            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME-FOR-PROJECTS",
+            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME-FOR-OPERATIONS",
+            "arn:aws:kinesis:AWS-REGION:AWS-ACCOUNT-NUMBER:stream/AWS-STREAM-NAME-FOR-AUDIT"
         ]
     }
 }
@@ -174,7 +189,7 @@ podman push quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 
 ## Customize
 
-The file `deployment/deployment-secure-forward.yaml` contains a directive to
+The file `deployment/deployment.yaml` contains a directive to
 pull the container image from `quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest`.
 Please customize it to your repository.
 
@@ -183,11 +198,11 @@ Please customize it to your repository.
 Run the installer, replace the environment variables with your data.
 
 ```
-cd ../scripts
+cd ./scripts
 AWS_KEY_ID=YOUR-AWS-KEY-ID \
 AWS_SEC_KEY=YOUR-AWS-SEC-KEY \
-SHARED_KEY=TheSecureForwardSharedKeyChangeMe \
-KINESIS_STREAM_NAME="your-kinesis-stream-name" \
+LOGGINGNAMES="projects operations audit" \
+KINESIS_STREAM_NAME="your-kinesis-stream-projects your-kinesis-stream-operations your-kinesis-stream-audit" \
 KINESIS_REGION="your-aws-region" \
 ./install_log_forwarding_kinesis.sh
 
@@ -198,6 +213,7 @@ KINESIS_REGION="your-aws-region" \
 To completely uninstall and revert all settings back.
 
 ```
+LOGGINGNAMES="projects operations audit" \
 ./uninstall_log_forwarding_kinesis.sh
 ```
 
