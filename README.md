@@ -120,6 +120,8 @@ A: Follow these instructions:
 * Generate traffic in logs
 * Inspect AWS kinesis monitoring graphs
 
+---
+
 ### Create your Kinesis Streams
 
 ```bash
