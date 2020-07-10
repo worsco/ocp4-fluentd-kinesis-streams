@@ -4,15 +4,17 @@
 
 ## Use-Case
 
-We need to keep short-term logs (from 3 to 14 days) in OpenShift using the provided 
-EFK stack.  In addition, we need to keep logs for a much longer duration (months to 
-possibly years).  The OpenShift cluster is in AWS, and we have the capability to 
+We need to keep short-term logs (from 3 to 14 days) in OpenShift using the provided
+EFK stack.  In addition, we need to keep logs for a much longer duration (months to
+possibly years).  The OpenShift cluster is in AWS, and we have the capability to
 use AWS's Kinesis Streams.  
 
 Red Hat OpenShift 4.3 provides the capability to fork log output to the internal Elastic
- and to another fluentd instance.  To do so, you have to stand up a custom fluentd 
- (and install the AWS plugins) and configure the stock fluentd to forward to the external 
+ and to another fluentd instance.  To do so, you have to stand up a custom fluentd
+ (and install the AWS plugins) and configure the stock fluentd to forward to the external
  fluentd using the fluentd-secure-forwarder method.
+
+---
 
 ### Externally Hosted fluentd-secure-forwarder
 
@@ -20,11 +22,15 @@ The following URL contains a design to stand up an external fluentd-secure-forwa
 
 http://v1.uncontained.io/playbooks/operationalizing/secure-forward-splunk.html
 
+---
+
 ### fluentd-secure-forwarder within OpenShift
 
-After considering standing up a single VM, it was decided to host the fluentd-secure-forwarder 
-within OpenShift.  This design will allow scaling the pod for high availability as well as 
+After considering standing up a single VM, it was decided to host the fluentd-secure-forwarder
+within OpenShift.  This design will allow scaling the pod for high availability as well as
 scaling under CPU load.
+
+---
 
 ### Base Image
 
@@ -32,9 +38,9 @@ scaling under CPU load.
 
 A: docker://registry.redhat.io/openshift4/ose-logging-fluentd
 
-* As of 2020-05-20, image tag is v4.3.20-202005121847
+* As of 2020-07-10, image tag is v4.3.28-202006290519.p0
 
-* https://catalog.redhat.com/software/containers/detail/5cd9744edd19c778293af093?tag=v4.3.20-202005121847&container-tabs=overview
+* https://catalog.redhat.com/software/containers/detail/5cd9744edd19c778293af093?tag=v4.3.28-202006290519.p0&container-tabs=overview
 
 **Q: How do you add the kinesis-streams plugin for fluentd?**
 
@@ -71,11 +77,38 @@ A: Follow these instructions:
 
 * https://docs.openshift.com/container-platform/4.3/logging/config/cluster-logging-external.html#cluster-logging-collector-fluentd_cluster-logging-external
 
+---
+
 ## Architecture Diagram
 
 ![Architecture Diagram](/diagram/fluentd_kinesis_forwarder.png "Architecture Diagram")
 
-## Installation Process
+---
+
+## PRE-REQUISITES
+* AWS
+  * An Account
+* IAM User
+  - Access to AWS Stream(s)
+* AWS Kinesis Stream(s)
+  - audit stream
+  - operations stream
+  - projects stream
+* Container Image Repositories
+  - Quay.io
+    - An account
+    - One image repository
+  - registry.redhat.io
+    - An account
+* OpenShift 4.3+ Cluster
+  - OCP4 < 4.3 does not contain the LogForwarder API
+  - Operators Installed:
+    - Cluster Logging
+    - Elastic
+
+---
+
+### Installation Process
 
 * AWS OCP 4.3 cluster
 * Install logging stack
@@ -87,9 +120,9 @@ A: Follow these instructions:
 * Generate traffic in logs
 * Inspect AWS kinesis monitoring graphs
 
-## Create your Kinesis Streams
+### Create your Kinesis Streams
 
-```
+```bash
 Amazon Kinesis -> Data streams -> Create data stream
 
 Data stream name:
@@ -106,22 +139,26 @@ Repeat above to create all streams
 
 Take note of the ARN, it will be used with your the policy attached to your IAM User
 
-## Create your AWS IAM User
+---
+
+### Create your AWS IAM User
 
 Create an IAM user and name it to your liking.
 
-```
-Create a new user:
+Create a new user either through the AWS Console or scripts.  I've named my user `ocp4-kinesis-user`
+```bash
 ocp4-kinesis-user
 ```
 
-Take note of the `AWS_KEY_ID` and `AWS_SEC_KEY` as it will be used during the installation.
+When the user is created, be sure to take note of the `AWS_KEY_ID` and `AWS_SEC_KEY` as both will be used during the installation.
 
-## Attach Policy
+---
+
+### Attach Policy
 
 You should further restrict the following policy.
 
-```
+```json
 {
     "Version": "2012-10-17",
     "Statement": {
@@ -138,77 +175,78 @@ You should further restrict the following policy.
     }
 }
 ```
+---
 
-## Build with container with buildah
+### Build container with buildah
 
 Export your registry.redhat.io user + password to environmental variables.
 
-```
+```bash
 export RH_REG_USER=YourUsername
 export RH_REG_PASS=YourPassword
 ```
 
 Log into the registry (previously set the environment variables `RH_REG_USER` and `RH_REG_PASS` with my credentials).
 
-```
+```bash
 cd containers/
 buildah login -u $RH_REG_USER -p $RH_REG_PASS registry.redhat.io
 ```
 
-Build the container.
+Build and tag the image.  In my use case, the quay repo is named 'worsco'
+-- change it to your repo name.
 
-```
-buildah bud -t fluentd-custom-kinesis .
-```
-
-Tag the image. The quay repo is named 'worsco' -- change it to your repo name.
-
-```
-podman tag localhost/fluentd-custom-kinesis quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
+```bash
+buildah bud -t quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest .
 ```
 
 I will be pushing my container into quay.  To do so, I will be logging into quay.io and will need to
 export my quay.io user + password to environment variables.
 
-```
+```bash
 export QUAY_USER=YourUsername
 export QUAY_PASS=YourPassword
 ```
 
 Log into quay.
 
-```
+```bash
 podman login -u $QUAY_USER -p $QUAY_PASS quay.io
 ```
 
 Push the image into your repository.
 
-```
+```bash
 podman push quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
 ```
+---
 
-## Customize
+### Customize the k8s deployment
 
 The file `deployment/deployment.yaml` contains a directive to
 pull the container image from `quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest`.
 Please customize it to your repository.
 
-## Install
+---
+
+### Install
 
 Run the installer, replace the environment variables with your data.
 
-```
+```bash
 cd ./scripts
+
 AWS_KEY_ID=YOUR-AWS-KEY-ID \
 AWS_SEC_KEY=YOUR-AWS-SEC-KEY \
 LOGGINGNAMES="projects operations audit" \
 KINESIS_STREAM_NAME="your-kinesis-stream-projects your-kinesis-stream-operations your-kinesis-stream-audit" \
 KINESIS_REGION="your-aws-region" \
 ./install_log_forwarding_kinesis.sh
-
 ```
 
-## Uninstall
+---
+
+### Uninstall
 
 To completely uninstall and revert all settings back.
 
@@ -216,6 +254,7 @@ To completely uninstall and revert all settings back.
 LOGGINGNAMES="projects operations audit" \
 ./uninstall_log_forwarding_kinesis.sh
 ```
+---
 
 ## Todo
 
