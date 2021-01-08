@@ -5,9 +5,6 @@ if [[ -z "$LOGGINGNAMES" ]]; then
   exit 1
 fi
 
-# Remove the annotation from ClusterLogging
-oc annotate ClusterLogging/instance clusterlogging.openshift.io/logforwardingtechpreview-
-
 # Remove the LogForwarding instance
 oc delete LogForwarding instance -n openshift-logging
 
