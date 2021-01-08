@@ -1,22 +1,24 @@
-FROM registry.redhat.io/openshift4/ose-logging-fluentd:v4.3.28-202006290519.p0
+# FROM registry.redhat.io/openshift4/ose-logging-fluentd:v4.3.28-202006290519.p0
+# 2021-01-08 4.6
+FROM registry.redhat.io/openshift4/ose-logging-fluentd@sha256:11ccb42f3d96b065f7d94879611a7aefabbe509b522c11ac36be7a1c959a34d6
 
 MAINTAINER Infra DevOps <scott.c.worthington+quayio@gmail.com>
 
 USER 0
 
 RUN \
-      INSTALL_PKGS="rh-ruby25-ruby-devel  rh-ruby25-rubygems-devel  gcc-c++  make" \
- &&   REMOVE_PKGS="cpp gcc glibc-devel glibc-headers libgomp libmpc libstdc++-devel kernel-headers mpfr" \
+      INSTALL_PKGS="redhat-rpm-config ruby-devel  rubygems-devel  gcc-c++  make" \
+ &&   REMOVE_PKGS="cpp gcc glibc-devel glibc-headers libgomp libmpc libstdc++-devel kernel-headers" \
  &&   yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS \
  &&   rpm -V $INSTALL_PKGS \
- &&   scl enable rh-ruby25 "/opt/rh/rh-ruby25/root/usr/bin/gem install fluent-plugin-kinesis --verbose" \
+ &&   gem install fluent-plugin-kinesis --verbose \
  &&   yum remove -y  --setopt=tsflags=nodocs $INSTALL_PKGS $REMOVE_PKGS \
  &&   yum clean all
 
 WORKDIR ${HOME}
 
 #CMD ["scl", "enable", "rh-ruby25", "--", "sh", "run.sh"]
-CMD ["scl", "enable", "rh-ruby25", "bash"]
+#CMD ["scl", "enable", "rh-ruby25", "bash"]
 
 LABEL io.k8s.display-name=Fluentd-custom-kinesis
 

@@ -21,20 +21,13 @@ spec:
       secret:
         name: log-forwarding-kinesis-secure-infra
   pipelines:
-    - name: audit-logs
-      inputRefs:
-        - audit
-      outputRefs:
-        - log-forwarding-kinesis-audit
     - name: application-logs
       inputRefs:
         - application
       outputRefs:
         - default
-        - log-forwarding-kinesis-apps
     - name: infrastructure-logs
       inputRefs:
         - infrastructure
       outputRefs:
         - default
-        - log-forwarding-kinesis-infra

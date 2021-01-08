@@ -38,9 +38,10 @@ scaling under CPU load.
 
 A: docker://registry.redhat.io/openshift4/ose-logging-fluentd
 
-* As of 2020-07-10, image tag is v4.3.28-202006290519.p0
+* As of 2021-01-08, image sha256 is 11ccb42f3d96b065f7d94879611a7aefabbe509b522c11ac36be7a1c959a34d6
 
-* https://catalog.redhat.com/software/containers/detail/5cd9744edd19c778293af093?tag=v4.3.28-202006290519.p0&container-tabs=overview
+registry.redhat.io/openshift4/ose-logging-fluentd@sha256:11ccb42f3d96b065f7d94879611a7aefabbe509b522c11ac36be7a1c959a34d6
+
 
 **Q: How do you add the kinesis-streams plugin for fluentd?**
 
@@ -71,11 +72,21 @@ Dependencies to use the `aws-fluent-plugin-kinesis`:
 
 * https://github.com/openshift/origin-aggregated-logging/blob/release-4.3/fluentd/Dockerfile
 
+**4.6 branch:**
+
+* https://github.com/openshift/origin-aggregated-logging/blob/release-4.6/fluentd/Dockerfile
+
 **Q: How do you configure OpenShift to fork logs to the fluentd-kinesis-forwader?**
 
 A: Follow these instructions:
 
+**OCP 4.3 - 4.5**
+
 * https://docs.openshift.com/container-platform/4.3/logging/config/cluster-logging-external.html#cluster-logging-collector-fluentd_cluster-logging-external
+
+**OCP 4.6**
+
+* https://docs.openshift.com/container-platform/4.6/logging/cluster-logging-external.html#cluster-logging-collector-log-forward-fluentd_cluster-logging-external
 
 ---
 
@@ -110,7 +121,7 @@ A: Follow these instructions:
 
 ### Installation Process
 
-* AWS OCP 4.3 cluster
+* AWS OCP 4.6 cluster
 * Install logging stack
 * Investigate how to enable Kinesis stream on AWS (maybe on personal AWS account)
 * Enable kinesis stream API endpoint service on AWS
@@ -128,7 +139,7 @@ A: Follow these instructions:
 Amazon Kinesis -> Data streams -> Create data stream
 
 Data stream name:
-mytest-ocp-kinesis-stream-[projects | operations | audit]
+mytest-ocp-kinesis-stream-[apps|audit|infra]
 
 Data stream capacity
 Number of open shards
@@ -191,7 +202,7 @@ export RH_REG_PASS=YourPassword
 Log into the registry (previously set the environment variables `RH_REG_USER` and `RH_REG_PASS` with my credentials).
 
 ```bash
-cd containers/
+cd build/
 buildah login -u $RH_REG_USER -p $RH_REG_PASS registry.redhat.io
 ```
 
@@ -240,8 +251,8 @@ cd ./scripts
 
 AWS_KEY_ID=YOUR-AWS-KEY-ID \
 AWS_SEC_KEY=YOUR-AWS-SEC-KEY \
-LOGGINGNAMES="projects operations audit" \
-KINESIS_STREAM_NAME="your-kinesis-stream-projects your-kinesis-stream-operations your-kinesis-stream-audit" \
+LOGGINGNAMES="apps audit infra" \
+KINESIS_STREAM_NAME="your-kinesis-stream-apps your-kinesis-stream-audit your-kinesis-stream-infra" \
 KINESIS_REGION="your-aws-region" \
 ./install_log_forwarding_kinesis.sh
 ```

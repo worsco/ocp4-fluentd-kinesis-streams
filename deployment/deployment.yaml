@@ -63,10 +63,6 @@ spec:
           image: >-
             quay.io/worsco/ocp4-fluentd-kinesis-forwarder:latest
           args:
-            - scl
-            - enable
-            - rh-ruby25
-            - "--"
             - fluentd
       volumes:
         - name: log-forwarding-kinesis-config

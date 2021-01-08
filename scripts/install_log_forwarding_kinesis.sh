@@ -37,12 +37,16 @@ if [[ -z "$KINESIS_REGION" ]]; then
 fi
 
 
+echo -e "\nCreating secrets...\n"
+
 # Create the AWS Kinesis credentials secret
 oc create secret generic log-forwarding-kinesis-aws -n openshift-logging \
 --from-literal=AWS_KEY_ID="$AWS_KEY_ID" \
 --from-literal=AWS_SEC_KEY="$AWS_SEC_KEY"
 
 # Need to loop through the values of LOGGINGNAME and create a service for each.
+
+echo -e "\nCreating services...\n"
 
 # log-forwarding-kinesis-service needs SERVICENAME replace with LOGGINGNAME
 cd ../deployment/
@@ -51,6 +55,8 @@ for LOGNAME in $LOGGINGNAMES; do
   sed -i "s/SERVICENAME/$LOGNAME/g" /tmp/service.yaml && \
   oc create -f /tmp/service.yaml
 done
+
+echo -e "\nCreating tls...\n"
 
 export MYINDEX=0
 export MYSTREAM=($KINESIS_STREAM_NAME)
@@ -79,7 +85,11 @@ do
   MYINDEX=$((MYINDEX + 1))
 done
 
+echo -e "\nCreating configmap...\n"
+
 oc create configmap log-forwarding-kinesis-config --from-file=td-agent.conf -n openshift-logging
+
+echo -e "\nCreating deployments...\n"
 
 export MYINDEX=0
 export MYSTREAM=($KINESIS_STREAM_NAME)
@@ -95,13 +105,10 @@ do
   MYINDEX=$((MYINDEX + 1))
 done
 
-# Annotate to enable the LogForwarding API
-
-oc annotate ClusterLogging/instance clusterlogging.openshift.io/logforwardingtechpreview="enabled"
-
 # Create the LogForwarding instance Custom Resource
 
+echo -e "\nCreating LogForwarding instance...\n"
 oc create -f logforwarding_cr.yaml
 
 # Done
-echo "END_OF_JOB"
+echo -e "\nEND_OF_JOB"
