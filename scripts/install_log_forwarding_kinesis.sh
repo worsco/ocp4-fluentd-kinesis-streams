@@ -1,37 +1,37 @@
 #!/bin/bash
 # install_log_forwarding_kinesis.sh
 
-if [[ -z "$AWS_KEY_ID" ]]; then
+if [ -z "$AWS_KEY_ID" ]; then
   echo "You need to set the AWS_KEY_ID environment variable"
   exit 1
 fi
 
-if [[ -z "$AWS_SEC_KEY" ]]; then
+if [ -z "$AWS_SEC_KEY" ]; then
   echo "You need to set the AWS_SEC_KEY environment variable"
   exit 1
 fi
 
-if [[ -z "$LOGGINGNAMES" ]]; then
+if [ -z "$LOGGINGNAMES" ]; then
   echo "You need to set the LOGGINGNAMES environment variable"
   exit 1
 fi
 
-#if [[ -z "$SHARED_KEY_PREFIX" ]]; then
+#if [ -z "$SHARED_KEY_PREFIX" ]; then
 #  echo "You need to set the SHARED_KEY_PREFIX environment variable"
 #  exit 1
 #fi
 
-#if [[ -z "$SHARED_KEY_ENV" ]]; then
+#if [ -z "$SHARED_KEY_ENV" ]; then
 #  echo "You need to set the SHARED_KEY_ENV environment variable"
 #  exit 1
 #fi
 
-if [[ -z "$KINESIS_STREAM_NAME" ]]; then
+if [ -z "$KINESIS_STREAM_NAME" ]; then
   echo "You need to set the KINESIS_STREAM_NAME environment variable"
   exit 1
 fi
 
-if [[ -z "$KINESIS_REGION" ]]; then
+if [ -z "$KINESIS_REGION" ]; then
   echo "You need to set the KINESIS_REGION environment variable"
   exit 1
 fi

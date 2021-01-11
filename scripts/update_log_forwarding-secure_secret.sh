@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ -z "$SHARED_KEY" ]]; then
+if [ -z "$SHARED_KEY" ]; then
     echo "ERROR: The SHARED_KEY environment variable is blank, aborting."
     exit 1
 fi
@@ -8,12 +8,12 @@ fi
 export TLS_KEY=$(oc get secret -n openshift-logging log-forwarding-kinesis -o jsonpath="{.data['tls\.key']}" | base64 -d)
 export TLS_CRT=$(oc get secret -n openshift-logging log-forwarding-kinesis -o jsonpath="{.data['tls\.crt']}" | base64 -d)
 
-if [[ -z "$TLS_KEY" ]]; then
+if [ -z "$TLS_KEY" ]; then
     echo "Error: tls.key in the secret log-forwarding-kinesis is blank, aborting."
     exit 1
 fi
 
-if [[ -z "$TLS_CRT" ]]; then
+if [ -z "$TLS_CRT" ]; then
     echo "Error: tls.crt in the secret log-forwarding-kinesis is blank, aborting."
     exit 1
 fi

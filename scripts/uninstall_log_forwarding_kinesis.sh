@@ -1,12 +1,12 @@
 #!/bin/bash
 
-if [[ -z "$LOGGINGNAMES" ]]; then
+if [ -z "$LOGGINGNAMES" ]; then
   echo "You need to set the LOGGINGNAMES environment variable"
   exit 1
 fi
 
 # Remove the LogForwarding instance
-oc delete LogForwarding instance -n openshift-logging
+oc delete ClusterLogForwarder instance -n openshift-logging
 
 # Clean up artifacts
 oc delete secret log-forwarding-kinesis-aws -n openshift-logging
